@@ -180,8 +180,10 @@ def menu(exits):
         user_input=input()
         # Normalise the input
         normalised_input=normalise_input(user_input)
-        return normalised_input
-
+        if is_valid_exit(exits , user_input) == False:
+            print("You cannot go there")
+        else:
+            return normalised_input
         # Check if the input makes sense (is valid exit)
             # If so, return the player's choice
 
