@@ -184,8 +184,7 @@ def menu(exits):
             print("You cannot go there")
         else:
             return normalised_input
-        # Check if the input makes sense (is valid exit)
-            # If so, return the player's choice
+
 
 
 
