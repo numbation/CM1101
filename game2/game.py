@@ -54,8 +54,8 @@ def print_room_items(room):
     Note: <BLANKLINE> here means that doctest should expect a blank line.
 
     """
-    print ("There is",list_of_items(room["items"]),"here.")
-    print ()
+    if room["items"] != []:
+        print ("There is "+list_of_items(room["items"])+" here.\n")
     pass
 
 
@@ -196,9 +196,13 @@ def print_menu(exits, room_items, inv_items):
     print("You can:")
     # Iterate over available exits
     for direction in exits:
-        # Print the exit name and where it leads to
         print_exit(direction, exit_leads_to(exits, direction))
-
+    room_items = current_room["items"]
+    for item in room_items:
+        print("TAKE " + item["id"].upper() + " to take " + item["name"] + ".")
+    inv_items = inventory
+    for item in inv_items:
+        print("DROP " + item["id"].upper() + " to drop " + item["name"] + ".")
     #
     # COMPLETE ME!
     #
@@ -231,7 +235,12 @@ def execute_go(direction):
     (and prints the name of the room into which the player is
     moving). Otherwise, it prints "You cannot go there."
     """
-    pass
+    global current_room
+    try:
+        new_room = rooms[current_room["exits"][direction]]
+        current_room = new_room
+    except KeyError:
+        print("You cannot go there.")
 
 
 def execute_take(item_id):
@@ -240,7 +249,17 @@ def execute_take(item_id):
     there is no such item in the room, this function prints
     "You cannot take that."
     """
-    pass
+    global current_room
+    global inventory
+    item_found = False
+    for item in current_room["items"]:
+        if item_id == item["id"]:
+            item_found = True
+    if item_found:
+        return True
+    else:
+        print("You cannot take that.")
+        return False
     
 
 def execute_drop(item_id):
@@ -248,7 +267,21 @@ def execute_drop(item_id):
     player's inventory to list of items in the current room. However, if there is
     no such item in the inventory, this function prints "You cannot drop that."
     """
-    pass
+    global current_room
+    global inventory
+    item_found = False
+    for item in inventory:
+        if item_id == item["id"]:
+            item_found = True
+            current_room["items"].append(item)
+            inventory.remove(item)
+            print("You drop " + item["name"] + ".")
+            break
+    if item_found:
+        return True
+    else:
+        print("You cannot drop that.")
+        return False
     
 
 def execute_command(command):
@@ -256,7 +289,7 @@ def execute_command(command):
     normalise_input) and, depending on the type of action (the first word of
     the command: "go", "take", or "drop"), executes either execute_go,
     execute_take, or execute_drop, supplying the second word as the argument.
-
+    
     """
 
     if 0 == len(command):
