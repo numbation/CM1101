@@ -254,6 +254,9 @@ def execute_take(item_id):
     item_found = False
     for item in current_room["items"]:
         if item_id == item["id"]:
+            current_room["items"].remove(item)
+            inventory.append(item)
+            print("You take " +item["name"]+".")
             item_found = True
     if item_found:
         return True
