@@ -17,8 +17,12 @@ def remove_punct(text):
     >>> remove_punct(",go!So.?uTh")
     'goSouTh'
     """
-    no_punct = str.maketrans({key: None for key in string.punctuation})
-    return (text.translate(no_punct))
+    no_punct = ""
+    for char in text:
+        if not (char in string.punctuation):
+            no_punct = no_punct + char
+
+    return no_punct
     
     
 def remove_spaces(text):
